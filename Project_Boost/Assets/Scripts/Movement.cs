@@ -6,8 +6,14 @@ public class Movement : MonoBehaviour
 {
     Rigidbody rb;
     AudioSource audioSource;
+
     [SerializeField] float mainthrust = 100;
     [SerializeField] float rotation_speed = 1f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] ParticleSystem mainBooster;
+    [SerializeField] ParticleSystem leftBooster;
+    [SerializeField] ParticleSystem rightBooster;
+
 
     // Start is called before the first frame update
     void Start()
@@ -30,14 +36,20 @@ public class Movement : MonoBehaviour
             Debug.Log("space bar");
             rb.AddRelativeForce(Vector3.up * mainthrust * Time.deltaTime); //or Vector3.up = 0, 1, 0.  Time.deltaTime to remove frame dependent
 
+            if (!mainBooster.isPlaying)
+            {
+                mainBooster.Play();
+            }
+
             if (!audioSource.isPlaying) //add sound for thrust
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(mainEngine);
             }
         }
         else
         {
             audioSource.Stop(); //stop sound when space bar is released
+            mainBooster.Stop();
         }
     }
 
@@ -60,6 +72,8 @@ public class Movement : MonoBehaviour
         transform.Rotate(Vector3.forward * rotation_this_frame * Time.deltaTime); //Vector3.forward = 0, 0, 1
         rb.freezeRotation = false;
     }
+
+
 }
 
 
