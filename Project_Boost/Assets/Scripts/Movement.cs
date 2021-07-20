@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     Rigidbody rb;
+    AudioSource audioSource;
     [SerializeField] float mainthrust = 100;
     [SerializeField] float rotation_speed = 1f;
 
@@ -12,6 +13,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //cache the rigidbody component in rb on start
+        audioSource = GetComponent<AudioSource>(); //cache audiosource
     }
 
     // Update is called once per frame
@@ -26,8 +28,16 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space)) //if space bar is down
         {
             Debug.Log("space bar");
-            rb.AddRelativeForce(Vector3.up * mainthrust * Time.deltaTime); //or Vector3.up = 0, 1, 0.  Time.deltaTime to remove frame dependence
+            rb.AddRelativeForce(Vector3.up * mainthrust * Time.deltaTime); //or Vector3.up = 0, 1, 0.  Time.deltaTime to remove frame dependent
 
+            if (!audioSource.isPlaying) //add sound for thrust
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop(); //stop sound when space bar is released
         }
     }
 
