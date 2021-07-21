@@ -33,23 +33,27 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space)) //if space bar is down
         {
-            Debug.Log("space bar");
-            rb.AddRelativeForce(Vector3.up * mainthrust * Time.deltaTime); //or Vector3.up = 0, 1, 0.  Time.deltaTime to remove frame dependent
-
-            if (!mainBooster.isPlaying)
-            {
-                mainBooster.Play();
-            }
-
-            if (!audioSource.isPlaying) //add sound for thrust
-            {
-                audioSource.PlayOneShot(mainEngine);
-            }
+            StartThrust();
         }
         else
         {
             audioSource.Stop(); //stop sound when space bar is released
             mainBooster.Stop();
+        }
+    }
+
+    private void StartThrust()
+    {
+        rb.AddRelativeForce(Vector3.up * mainthrust * Time.deltaTime); //or Vector3.up = 0, 1, 0.  Time.deltaTime to remove frame dependent
+
+        if (!mainBooster.isPlaying)
+        {
+            mainBooster.Play();
+        }
+
+        if (!audioSource.isPlaying) //add sound for thrust
+        {
+            audioSource.PlayOneShot(mainEngine);
         }
     }
 
