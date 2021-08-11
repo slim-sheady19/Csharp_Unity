@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Waypoint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Tower towerPrefab;
+    [SerializeField] bool isPlaceable;
+    public bool IsPlaceable { get { return isPlaceable; } } //this getter function is a property of the bool declared one line above.
 
-    // Update is called once per frame
-    void Update()
+    void OnMouseDown()
     {
+        if (isPlaceable)
+        {
+            bool isPlaced = towerPrefab.CreateTower(towerPrefab, transform.position);  //CreateTower method returns bool which we set to is isPlaced
+            //Instantiate(towerPrefab, transform.position, Quaternion.identity); //moved this line to tower.cs CreateTower method
+            isPlaceable = !isPlaced; //once a tower is placed set the tile to no longer placeable
+        }
         
     }
 }

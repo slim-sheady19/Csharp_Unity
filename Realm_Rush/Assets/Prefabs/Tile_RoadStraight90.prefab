@@ -7,13 +7,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1228297594073317301, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
+      propertyPath: m_text
+      value: 6, 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 59.559124
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalPosition.y
@@ -29,15 +33,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451758, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -53,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1228297594245451759, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_Name
-      value: Tile_RoadStraight90
+      value: (6, 0)
       objectReference: {fileID: 0}
     - target: {fileID: 5558062163945583711, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalRotation.w
@@ -74,6 +78,14 @@ PrefabInstance:
     - target: {fileID: 5558062163945583711, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8527994194106937707, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
+      propertyPath: isPlaceable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8527994194106937707, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
+      propertyPath: towerPrefab
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfbd47d0ffa89cd48b241725a1c827ca, type: 3}
