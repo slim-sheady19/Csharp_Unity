@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Enemy))]
+
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] List<Waypoint> path = new List<Waypoint>(); //list is a vector?.  create list of Waypoint objects called path
@@ -27,17 +29,29 @@ public class EnemyMover : MonoBehaviour
     {
         path.Clear(); //clear the list before adding the new path
 
-        GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Path");
+        GameObject parent = GameObject.FindGameObjectWithTag("Path");
 
-        foreach(GameObject waypoint in waypoints)
+        foreach(Transform child in parent.transform) //add path to list in order.  for this to work they must be selected in the right order in the hierarchy
         {
-            path.Add(waypoint.GetComponent<Waypoint>());
+            Waypoint waypoint = child.GetComponent<Waypoint>();
+
+            if(waypoint != null)
+            {
+                path.Add(waypoint);
+            }
+            
         }
     }
 
     void ReturnToStart()
     {
         transform.position = path[0].transform.position;
+    }
+
+    void FinishPath()
+    {
+        enemy.StealGold();
+        gameObject.SetActive(false);
     }
 
     IEnumerator FollowPath()
@@ -59,8 +73,7 @@ public class EnemyMover : MonoBehaviour
                 yield return new WaitForEndOfFrame(); //coroutine, see below.  WaitForEndOfFrame ensures it does not move too quickly
             }
         }
-        enemy.StealGold();
-        gameObject.SetActive(false);
+        FinishPath();
     }
 }
 
