@@ -11,16 +11,19 @@ public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
     [SerializeField] Color blockedColor = Color.gray;
+    [SerializeField] Color exploredColor = Color.yellow;
+    [SerializeField] Color pathColor = new Color(1f, 0.5f, 0f); //orange isn't built in
 
-    TextMeshPro label;
+   TextMeshPro label;
     Vector2Int coordinates = new Vector2Int();
-    Waypoint waypoint;
+    GridManager gridManager;
+  
 
     void Awake()
     {
+        gridManager = FindObjectOfType<GridManager>(); //set gridManager variable to the one GridManager in the scene
         label = GetComponent<TextMeshPro>();
         label.enabled = false;
-        waypoint = GetComponentInParent<Waypoint>(); //Coordinate labeler is script attached to text object which is child of the object where Waypoint script is attached
         DisplayCoordinates();
     }
 
@@ -52,21 +55,41 @@ public class CoordinateLabeler : MonoBehaviour
 
     void SetLabelColor()
     {
-        if (waypoint.IsPlaceable)
+        if (gridManager == null) { return; }
+
+        Node node = gridManager.GetNode(coordinates);
+
+        if (node == null) { return; } //is valid check before proceeding
+
+        if (!node.isWalkable)
         {
-            label.color = defaultColor;
+            label.color = blockedColor;
+        }
+        else if (node.isPath) //path must come before explored since status of isPath is set once explored
+        {
+            label.color = pathColor;
+        }
+        else if (node.isExplored)
+        {
+            label.color = exploredColor;
         }
         else
         {
-            label.color = blockedColor;
+            label.color = defaultColor;
         }
     }
 
     void DisplayCoordinates()
     {
-        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / UnityEditor.EditorSnapSettings.move.x); //Mathf function to convert to int since variable coordinates is int
+        if (gridManager == null) { return; }
+
+        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / gridManager.UnityGridSize);
+        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / gridManager.UnityGridSize);
+
+        /*OLD VERSION
+         * coordinates.x = Mathf.RoundToInt(transform.parent.position.x / UnityEditor.EditorSnapSettings.move.x); //Mathf function to convert to int since variable coordinates is int
         coordinates.y = Mathf.RoundToInt(transform.parent.position.z / UnityEditor.EditorSnapSettings.move.z); //using Z as Y because 2-D plane in game is using X,Z coords in editor
-        //the division is for coords to be 1, 2 instead of 10, 20 etc
+        //the division is for coords to be 1, 2 instead of 10, 20 etc*/
 
         label.text = coordinates.x + ", " + coordinates.y;
     }

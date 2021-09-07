@@ -13,11 +13,11 @@ public class EnemyMover : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("Start Here");
+        //Debug.Log("Start Here");
         FindPath();
         ReturnToStart();
         StartCoroutine(FollowPath()); //calling coroutine is somewhat different
-        Debug.Log("finishing start");
+        //Debug.Log("finishing start");
     }
 
     void Start()
