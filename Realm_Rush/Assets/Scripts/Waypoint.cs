@@ -35,10 +35,17 @@ public class Waypoint : MonoBehaviour
     {
         if (gridManager.GetNode(coordinates).isWalkable && !pathfinder.WillBlockPath(coordinates))
         {
-            bool isPlaced = towerPrefab.CreateTower(towerPrefab, transform.position);  //CreateTower method returns bool which we set to is isPlaced
+            //bool isPlaced = towerPrefab.CreateTower(towerPrefab, transform.position);  //CreateTower method returns bool which we set to is isPlaced
             //Instantiate(towerPrefab, transform.position, Quaternion.identity); //moved this line to tower.cs CreateTower method
-            isPlaceable = !isPlaced; //once a tower is placed set the tile to no longer placeable
-            gridManager.BlockNode(coordinates);
+            //isPlaceable = !isPlaced; //once a tower is placed set the tile to no longer placeable
+
+            bool isSuccesful = towerPrefab.CreateTower(towerPrefab, transform.position);
+            if (isSuccesful)
+            {
+                gridManager.BlockNode(coordinates);
+                pathfinder.NotifyReceivers();
+            }
+            
         }
         
     }

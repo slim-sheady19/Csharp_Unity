@@ -5,7 +5,10 @@ using UnityEngine;
 public class PathFinder : MonoBehaviour
 {
     [SerializeField] Vector2Int startCoordinates;
+    public Vector2Int StartCoordinates { get { return startCoordinates; } }
+
     [SerializeField] Vector2Int destinationCoordinates;
+    public Vector2Int DestinationCoordinates { get { return destinationCoordinates; } }
 
     Node startNode;
     Node destinationNode;
@@ -25,22 +28,29 @@ public class PathFinder : MonoBehaviour
         //set the gridManager's Grid as a reference in this class
         if (gridManager != null)
         {
-            grid = gridManager.Grid; 
+            grid = gridManager.Grid;
+            startNode = gridManager.Grid[startCoordinates];
+            destinationNode = gridManager.Grid[destinationCoordinates];
         }
     }
 
     void Start()
     {
-        startNode = gridManager.Grid[startCoordinates];
-        destinationNode = gridManager.Grid[destinationCoordinates];
-
         GetNewPath();
     }
 
     public List<Node> GetNewPath()
     {
+        return GetNewPath(startCoordinates);
+        /*gridManager.ResetNodes();
+        BreadthFirstSearch(startCoordinates);
+        return BuildPath();*/
+    }
+
+    public List<Node> GetNewPath(Vector2Int coordinates) //overload
+    {
         gridManager.ResetNodes();
-        BreadthFirstSearch();
+        BreadthFirstSearch(coordinates);
         return BuildPath();
     }
 
@@ -69,15 +79,18 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    void BreadthFirstSearch()
+    void BreadthFirstSearch(Vector2Int coordinates)
     {
+        startNode.isWalkable = true;
+        destinationNode.isWalkable = true;
+
         frontier.Clear();
         reached.Clear();
 
         bool isRunning = true;
 
-        frontier.Enqueue(startNode);
-        reached.Add(startCoordinates, startNode);
+        frontier.Enqueue(grid[coordinates]);
+        reached.Add(coordinates, grid[coordinates]);
 
         while (frontier.Count > 0 && isRunning)
         {
@@ -129,5 +142,10 @@ public class PathFinder : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void NotifyReceivers() //broadcast message function to alert change in path
+    {
+        BroadcastMessage("RecalculatePath", false, SendMessageOptions.DontRequireReceiver); //use this overload to include boolean argument we require for RecalculatePath
     }
 }

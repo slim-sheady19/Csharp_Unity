@@ -6,46 +6,67 @@ using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] List<Waypoint> path = new List<Waypoint>(); //list is a vector?.  create list of Waypoint objects called path
+    //[SerializeField] List<Waypoint> path = new List<Waypoint>(); //list is a vector?.  create list of Waypoint objects called path. (this line being replaced with Nodes below)
+    List<Node> path = new List<Node>();
+
     [SerializeField] [Range(0f, 5f)] float speed = 1f; //range to prevent negative numbers
 
     Enemy enemy;
+    GridManager gridManager;
+    PathFinder pathfinder;
 
     void OnEnable()
     {
         //Debug.Log("Start Here");
-        FindPath();
         ReturnToStart();
-        StartCoroutine(FollowPath()); //calling coroutine is somewhat different
+        RecalculatePath(true);
+        
         //Debug.Log("finishing start");
     }
 
-    void Start()
+    void Awake()
     {
         enemy = GetComponent<Enemy>();
+        gridManager = FindObjectOfType<GridManager>();
+        pathfinder = FindObjectOfType<PathFinder>();
     }
 
-    void FindPath() 
+    void RecalculatePath(bool resetPath) 
     {
-        path.Clear(); //clear the list before adding the new path
+        Vector2Int coordinates = new Vector2Int();
 
-        GameObject parent = GameObject.FindGameObjectWithTag("Path");
-
-        foreach(Transform child in parent.transform) //add path to list in order.  for this to work they must be selected in the right order in the hierarchy
+        if (resetPath)
         {
-            Waypoint waypoint = child.GetComponent<Waypoint>();
-
-            if(waypoint != null)
-            {
-                path.Add(waypoint);
-            }
-            
+            coordinates = pathfinder.StartCoordinates;
         }
+        else
+        {
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
+        }
+
+        StopAllCoroutines(); //stop coroutine before getting new path, reenable after
+        path.Clear(); //clear the list before adding the new path
+        path = pathfinder.GetNewPath(coordinates);
+        StartCoroutine(FollowPath()); //calling coroutine is somewhat different
+
+        /*  OLD CODE BEFORE ADDING BREADTHFIRSTSEARCH PATHFINDING AND NODES
+         *  GameObject parent = GameObject.FindGameObjectWithTag("Path");
+
+          foreach(Transform child in parent.transform) //add path to list in order.  for this to work they must be selected in the right order in the hierarchy
+          {
+              Waypoint waypoint = child.GetComponent<Waypoint>();
+
+              if(waypoint != null)
+              {
+                  path.Add(waypoint);
+              }
+
+          }*/
     }
 
     void ReturnToStart()
     {
-        transform.position = path[0].transform.position;
+        transform.position = gridManager.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
     void FinishPath()
@@ -56,10 +77,10 @@ public class EnemyMover : MonoBehaviour
 
     IEnumerator FollowPath()
     {
-        foreach(Waypoint waypoint in path)
+        for (int i = 1; i < path.Count; i++)//OLD: foreach (Waypoint waypoint in path)
         {
             Vector3 startPos = transform.position;
-            Vector3 endPos = waypoint.transform.position;
+            Vector3 endPos = gridManager.GetPositionFromCoordinates(path[i].coordinates);
             float travelPercent = 0f;
 
             //rotate enemy to be facing direction of path
